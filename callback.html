@@ -12,14 +12,32 @@ const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
 if (!code) {
-  document.body.innerHTML = "Login failed";
+  document.body.innerHTML = "❌ No code received";
 }
 
-// 🔥 YOUR WORKER
+// DEBUG SHOW
+document.body.innerHTML = "Code received...<br>Loading user...";
+
+// 🔥 CALL WORKER
 fetch("https://aged-hat-98f0.mradvocate2326.workers.dev/auth?code=" + code)
-.then(res => res.json())
+.then(async res => {
+  const text = await res.text();
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error("Invalid JSON: " + text);
+  }
+})
 .then(user => {
 
+  // ❌ if error returned
+  if (user.message) {
+    document.body.innerHTML = "❌ Error: " + user.message;
+    return;
+  }
+
+  // ✅ SUCCESS → SHOW FORM
   document.body.innerHTML = `
     <h2>Welcome ${user.username}</h2>
 
@@ -59,11 +77,13 @@ fetch("https://aged-hat-98f0.mradvocate2326.workers.dev/auth?code=" + code)
       })
     });
 
-    document.body.innerHTML = "<h2>Submitted ✅</h2>";
+    document.body.innerHTML = "<h2>✅ Submitted Successfully</h2>";
   };
 
+})
+.catch(err => {
+  document.body.innerHTML = "❌ Fetch Error: " + err;
 });
 </script>
-
 </body>
 </html>
