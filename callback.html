@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ASRP Whitelist</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+
+      background: url("https://cdn.discordapp.com/attachments/1480621255223935127/1482059146336665772/los-angeles-downtown-buildings-night.jpg?ex=69ba2fe3&is=69b8de63&hm=67877a717d8ce495f30d0f59724c91890c4aeb522760ef016e63f3b13539a756&") no-repeat center/cover;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .box {
+      background: rgba(0,0,0,0.75);
+      padding: 30px;
+      border-radius: 12px;
+      width: 400px;
+      color: white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background: #5865F2;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #4752c4;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box" id="app">
+  <h2>Logging in...</h2>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
+
+if (!code) {
+  document.getElementById("app").innerHTML = "❌ No code received";
+}
+
+// FETCH USER
+fetch("https://aged-hat-98f0.mradvocate2326.workers.dev/auth?code=" + code)
+.then(res => res.json())
+.then(user => {
+
+  if (user.message) {
+    document.getElementById("app").innerHTML = "❌ Error: " + user.message;
+    return;
+  }
+
+  // SHOW FORM + QUIZ
+  document.getElementById("app").innerHTML = `
+    <h2>Welcome ${user.username}</h2>
+
+    <form id="form">
+      <input required placeholder="Minecraft Username" id="mc">
+
+      <select id="version">
+        <option>Java</option>
+        <option>Bedrock</option>
+        <option>Cracked</option>
+      </select>
+
+      <input required placeholder="Real Name" id="real">
+
+      <select id="rules">
+        <option>Yes - I follow all ASRP rules</option>
+        <option>No</option>
+      </select>
+
+      <hr>
+
+      <h3>📝 ASRP WHITELIST QUIZ</h3>
+
+      <label>1. What will you do if you find someone’s base?</label>
+      <select id="q1">
+        <option>A) Loot everything</option>
+        <option value="correct">B) Leave it and respect it</option>
+        <option>C) Destroy it</option>
+        <option>D) Tell others to raid</option>
+      </select>
+
+      <label>2. Is random killing (RDM) allowed?</label>
+      <select id="q2">
+        <option>A) Yes</option>
+        <option>B) Only if I’m bored</option>
+        <option value="correct">C) No, unless RP reason</option>
+        <option>D) Always allowed</option>
+      </select>
+
+      <label>3. What is Fail RP?</label>
+      <select id="q3">
+        <option>A) Winning every fight</option>
+        <option value="correct">B) Unrealistic actions</option>
+        <option>C) Building houses</option>
+        <option>D) Trading items</option>
+      </select>
+
+      <label>4. If a staff member gives you instructions, what should you do?</label>
+      <select id="q4">
+        <option>A) Ignore them</option>
+        <option>B) Argue always</option>
+        <option value="correct">C) Follow their instructions</option>
+        <option>D) Leave server</option>
+      </select>
+
+      <label>5. Why rules important?</label>
+      <select id="q5">
+        <option>A) Make boring</option>
+        <option>B) Control players</option>
+        <option value="correct">C) Fair gameplay</option>
+        <option>D) No reason</option>
+      </select>
+
+      <textarea id="why" placeholder="Why do you want to join ASRP SMP?"></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+  `;
+
+  document.getElementById("form").onsubmit = async (e) => {
+    e.preventDefault();
+
+    await fetch("https://aged-hat-98f0.mradvocate2326.workers.dev/submit", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        user,
+        mc: document.getElementById("mc").value,
+        version: document.getElementById("version").value,
+        real: document.getElementById("real").value,
+        rules: document.getElementById("rules").value,
+        q1: document.getElementById("q1").value,
+        q2: document.getElementById("q2").value,
+        q3: document.getElementById("q3").value,
+        q4: document.getElementById("q4").value,
+        q5: document.getElementById("q5").value,
+        why: document.getElementById("why").value
+      })
+    });
+
+    document.getElementById("app").innerHTML = "<h2>✅ Submitted Successfully</h2>";
+  };
+
+})
+.catch(err => {
+  document.getElementById("app").innerHTML = "❌ Error: " + err;
+});
+</script>
+
+</body>
+</html>
