@@ -5,25 +5,21 @@
 </head>
 <body>
 
-<h2>Logging you in...</h2>
+<h2>Logging in...</h2>
 
 <script>
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
 if (!code) {
-  document.body.innerHTML = "Login failed.";
+  document.body.innerHTML = "Login failed";
 }
 
-// CALL YOUR BACKEND
-fetch("https://YOUR-WORKER-URL/auth?code=" + code)
+// 🔥 YOUR WORKER
+fetch("https://aged-hat-98f0.mradvocate2326.workers.dev/auth?code=" + code)
 .then(res => res.json())
 .then(user => {
 
-  // STORE USER
-  localStorage.setItem("discordUser", JSON.stringify(user));
-
-  // SHOW FORM
   document.body.innerHTML = `
     <h2>Welcome ${user.username}</h2>
 
@@ -38,7 +34,7 @@ fetch("https://YOUR-WORKER-URL/auth?code=" + code)
 
       <input required placeholder="Real Name" id="real"><br><br>
 
-      <label>Do you follow all ASRP rules?</label><br>
+      <label>Follow ASRP Rules?</label><br>
       <select id="rules">
         <option>Yes</option>
         <option>No</option>
@@ -51,21 +47,19 @@ fetch("https://YOUR-WORKER-URL/auth?code=" + code)
   document.getElementById("form").onsubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
-      user,
-      mc: document.getElementById("mc").value,
-      version: document.getElementById("version").value,
-      real: document.getElementById("real").value,
-      rules: document.getElementById("rules").value
-    };
-
-    await fetch("https://YOUR-WORKER-URL/submit", {
+    await fetch("https://aged-hat-98f0.mradvocate2326.workers.dev/submit", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        user,
+        mc: document.getElementById("mc").value,
+        version: document.getElementById("version").value,
+        real: document.getElementById("real").value,
+        rules: document.getElementById("rules").value
+      })
     });
 
-    document.body.innerHTML = "<h2>Application Submitted ✅</h2>";
+    document.body.innerHTML = "<h2>Submitted ✅</h2>";
   };
 
 });
