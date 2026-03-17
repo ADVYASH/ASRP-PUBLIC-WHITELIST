@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loading...</title>
+</head>
+<body>
+
+<h2>Logging you in...</h2>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
+
+if (!code) {
+  document.body.innerHTML = "Login failed.";
+}
+
+// CALL YOUR BACKEND
+fetch("https://YOUR-WORKER-URL/auth?code=" + code)
+.then(res => res.json())
+.then(user => {
+
+  // STORE USER
+  localStorage.setItem("discordUser", JSON.stringify(user));
+
+  // SHOW FORM
+  document.body.innerHTML = `
+    <h2>Welcome ${user.username}</h2>
+
+    <form id="form">
+      <input required placeholder="Minecraft Username" id="mc"><br><br>
+
+      <select id="version">
+        <option>Java</option>
+        <option>Bedrock</option>
+        <option>Cracked</option>
+      </select><br><br>
+
+      <input required placeholder="Real Name" id="real"><br><br>
+
+      <label>Do you follow all ASRP rules?</label><br>
+      <select id="rules">
+        <option>Yes</option>
+        <option>No</option>
+      </select><br><br>
+
+      <button type="submit">Submit</button>
+    </form>
+  `;
+
+  document.getElementById("form").onsubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      user,
+      mc: document.getElementById("mc").value,
+      version: document.getElementById("version").value,
+      real: document.getElementById("real").value,
+      rules: document.getElementById("rules").value
+    };
+
+    await fetch("https://YOUR-WORKER-URL/submit", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    });
+
+    document.body.innerHTML = "<h2>Application Submitted ✅</h2>";
+  };
+
+});
+</script>
+
+</body>
+</html>
