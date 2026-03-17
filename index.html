@@ -2,14 +2,63 @@
 <html>
 <head>
   <title>ASRP Whitelist</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+
+      /* 🔥 BACKGROUND IMAGE */
+      background: url("https://cdn.discordapp.com/attachments/1480621255223935127/1482059146336665772/los-angeles-downtown-buildings-night.jpg?ex=69ba2fe3&is=69b8de63&hm=67877a717d8ce495f30d0f59724c91890c4aeb522760ef016e63f3b13539a756&") no-repeat center center/cover;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-family: Arial, sans-serif;
+    }
+
+    .box {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #5865F2;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #4752c4;
+      transform: scale(1.05);
+    }
+  </style>
 </head>
+
 <body>
 
-<h2>ASRP Whitelist Application</h2>
+<div class="box">
+  <h2>ASRP Whitelist Application</h2>
 
-<a href="https://discord.com/oauth2/authorize?client_id=1483486135949852783&response_type=code&redirect_uri=https%3A%2F%2Fwhitelistform--public.online%2Fcallback.html&scope=identify">
-  <button>Login with Discord</button>
-</a>
+  <a href="https://discord.com/oauth2/authorize?client_id=1483486135949852783&response_type=code&redirect_uri=https%3A%2F%2Fwhitelistform--public.online%2Fcallback.html&scope=identify">
+    <button>Login with Discord</button>
+  </a>
+</div>
 
 </body>
 </html>
